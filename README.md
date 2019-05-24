@@ -2,4 +2,4 @@
 
 ### Executar
 
-    Apenas baixe os arquivos e execute node arquivo.js
+    Apenas baixe os arquivos e execute 'node arquivo.js'
