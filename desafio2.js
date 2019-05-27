@@ -20,19 +20,20 @@ function menorCusto(custos, verificados) {
   }, null)
 }
 
-const menorCaminho = (grafo, origem, final) => {
-  let custo = { final: '-' }
-  custo = Object.assign(custo, grafo[origem])
-
-  const noOrigem = { final: null }
-  for (let ligacao in grafo[origem]) {
-    noOrigem[ligacao] = origem
+function geraCaminho(final, noOrigem) {
+  let caminhoFinal = [final]
+  let org = noOrigem[final]
+  while (org) {
+    caminhoFinal.push(org)
+    org = noOrigem[org]
   }
+  caminhoFinal.reverse()
+  return caminhoFinal
+}
 
+function checaCaminho(custo, grafo, origem, noOrigem) {
   const verificados = []
-
   let menor = menorCusto(custo, verificados)
-
   while (menor) {
     let custo_atual = custo[menor]
     let ligados = grafo[menor]
@@ -48,14 +49,19 @@ const menorCaminho = (grafo, origem, final) => {
     verificados.push(menor)
     menor = menorCusto(custo, verificados)
   }
+}
 
-  let caminhoFinal = [final]
-  let org = noOrigem[final]
-  while (org) {
-    caminhoFinal.push(org)
-    org = noOrigem[org]
+const menorCaminho = (grafo, origem, final) => {
+  let custo = Object.assign({}, grafo[origem])
+
+  const noOrigem = {}
+  for (let ligacao in grafo[origem]) {
+    noOrigem[ligacao] = origem
   }
-  caminhoFinal.reverse()
+
+  checaCaminho(custo, grafo, origem, noOrigem)
+
+  let caminhoFinal = geraCaminho(final, noOrigem)
 
   return `${final},${custo[final]},${caminhoFinal.join('-')}`
 }
